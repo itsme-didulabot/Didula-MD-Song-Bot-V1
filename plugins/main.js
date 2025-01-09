@@ -251,3 +251,54 @@ async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender
         reply(`${e}`)
     }
 })
+
+
+
+
+cmd({
+    pattern: "owner",
+    desc: "Get owner contact info",
+    category: "main",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+        // Owner vCard details
+        const vcard = 'BEGIN:VCARD\n' 
+            + 'VERSION:3.0\n' 
+            + 'FN:Didula Rashmika\n' // Full Name
+            + 'ORG:Owner Of the Didula MD Song Bot;\n' // Organization
+            + 'TEL;type=CELL;type=VOICE;waid=94771820962:+94771820962\n' // WhatsApp ID + Phone Number
+            + 'END:VCARD'
+
+        await conn.sendMessage(from, {
+            contacts: {
+                displayName: 'Didula Rashmika',
+                contacts: [{ vcard }]
+            },
+            contextInfo: {
+                externalAdReply: {
+                    title: "Owner Of the Didula MD Song Bot",
+                    body: "Contact me for any queries",
+                    thumbnail: {url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp'},
+                    mediaType: 1,
+                    showAdAttribution: true,
+                }
+            }
+        }, { quoted: mek })
+
+        // Send additional message with GIF
+        return await conn.sendMessage(from,{
+            image: {url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp'},
+            caption: `*👤 Bot Owner Information*\n\n`
+                + `*Name:* Didula Rashmika\n`
+                + `*Number:* +94771820962\n`
+                + `*Role:* Owner Of the Didula MD Song Bot\n\n`
+                + `_Send .alive to check bot status_`
+        },{quoted: mek})
+        
+    }catch(e){
+        console.log(e)
+        reply(`${e}`)
+    }
+})
