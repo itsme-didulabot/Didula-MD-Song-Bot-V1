@@ -10,7 +10,17 @@ const config = {
     aliveGif: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp',
     ownerNumber: '94771820962',
     botName: 'DIDULA MD SONG BOT',
-    searchQueries: ["Sinhala songs", "Slowed Reverb Sinhala", "New Sinhala Song", "මනෝපාරකට", "Sinhala songs 2025", "New Slowed Reverb Sinhala", "dj Sinhala Song", "new මනෝපාරකට" "manoparakata 2025"],
+    searchQueries: [
+        "Sinhala songs",
+        "Slowed Reverb Sinhala",
+        "New Sinhala Song",
+        "මනෝපාරකට",
+        "Sinhala songs 2025",
+        "New Slowed Reverb Sinhala",
+        "dj Sinhala Song",
+        "new මනෝපාරකට",
+        "manoparakata 2025"
+    ],
     checkInterval: 60000,
     requestTimeout: 15000,
     maxRetries: 3,
@@ -20,17 +30,7 @@ const config = {
 // State management
 let activeGroups = {};
 let lastSongTitles = {};
-let searchIndex = 1; // Initialize searchIndex to 1
-
-// Wait 10 minutes
-async function updateSearchIndex() {
-  while (true) {
-    await sleep(600000); // 10 minutes in milliseconds
-    searchIndex = (searchIndex + 19) % 20 + 1; // Cycle through 1-20
-  }
-}
-
-updateSearchIndex(); // Start the updateSearchIndex loop
+let searchIndex = 0;
 
 // Utility Functions
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -49,19 +49,19 @@ async function getLatestSong(retryCount = config.maxRetries) {
         try {
             const searchQuery = config.searchQueries[searchIndex];
             const searchResult = await yts(searchQuery);
+            
+            if (!searchResult?.all?.length) continue;
+            
             const song = searchResult.all[0];
-
-            if (!song) continue;
-
             const downloadInfo = await fetchJson(
-                `https://apitest1-f7dcf17bd59b.herokuapp.com/download/ytmp3?url=${song.url}`
+                `https://apitest1-f7dcf17bd59b.herokuapp.com/download/ytmp3?url=${encodeURIComponent(song.url)}`
             );
 
             if (!downloadInfo?.result?.dl_link) continue;
 
             return {
                 title: downloadInfo.result.title || song.title,
-                artist: song.author.name,
+                artist: song.author?.name || 'Unknown Artist',
                 downloadUrl: downloadInfo.result.dl_link,
                 thumbnail: song.thumbnail,
                 audioUrl: downloadInfo.result.dl_link
@@ -75,7 +75,7 @@ async function getLatestSong(retryCount = config.maxRetries) {
 }
 
 async function sendSong(conn, groupId, song) {
-    if (!song || !song.title || lastSongTitles[groupId] === song.title) return;
+    if (!song?.title || lastSongTitles[groupId] === song.title) return;
 
     lastSongTitles[groupId] = song.title;
     const message = `*🎧${config.botName}🎧*\n\n${song.title}\n\n> *ᴛʜɪꜱ ɪꜱ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ꜱᴏɴɢ ꜱᴇɴᴅɪɴɢ ʙᴏᴛ*\n\n> *ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ*\n\nhttps://wa.me/message/DIDULLTK7ZOGH1\n\n> *ꜰᴏʟʟᴏᴡ ᴍʏ ᴄʜᴀɴᴇʟ*\n\nhttps://whatsapp.com/channel/0029VaqqF4GDTkJwKruLSK2f\n\n*© Projects of Didula Rashmika*`;
@@ -86,12 +86,12 @@ async function sendSong(conn, groupId, song) {
             timeout: config.requestTimeout
         });
 
-        const mime = res.headers['content-type'] || 'application/octet-stream';
+        const mime = res.headers['content-type'] || 'audio/mpeg';
         const extension = mimeTypes.extension(mime) || 'mp3';
-        const fileName = `${song.title}.${extension}`;
+        const fileName = `${song.title}.${extension}`.replace(/[<>:"/\\|?*]/g, '_');
 
         await conn.sendMessage(groupId, {
-            document: { url: song.audioUrl },
+            document: Buffer.from(res.data),
             caption: message,
             mimetype: mime,
             fileName: fileName
@@ -103,6 +103,14 @@ async function sendSong(conn, groupId, song) {
     }
 }
 
+// Initialize search index updater
+(async function updateSearchIndex() {
+    while (true) {
+        await sleep(600000); // 10 minutes
+        searchIndex = (searchIndex + 1) % config.searchQueries.length;
+    }
+})();
+
 // Command Handlers
 cmd({
     pattern: "startsong",
@@ -113,7 +121,7 @@ cmd({
 }, async (conn, mek, m, { from, participants }) => {
     try {
         const isAdmin = participants.some(p => p.id === mek.sender && p.admin);
-        const isBotOwner = mek.sender === conn.user.jid;
+        const isBotOwner = mek.sender === config.ownerNumber + '@s.whatsapp.net';
 
         if (!isAdmin && !isBotOwner) {
             return await conn.sendMessage(from, { text: "🚫 Admin or owner permission required" });
@@ -138,7 +146,6 @@ cmd({
                         }
                     }
                 }
-                searchIndex = (searchIndex + 1) % config.searchQueries.length;
             }, config.checkInterval);
         }
 
@@ -147,6 +154,10 @@ cmd({
         await errorHandler(error, conn, from, "Failed to activate song service");
     }
 });
+
+
+
+
 
 cmd({
     pattern: "stopsong",
