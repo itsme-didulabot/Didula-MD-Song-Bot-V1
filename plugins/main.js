@@ -3,7 +3,7 @@ const { fetchJson } = require('../lib/functions');
 const yts = require("yt-search");
 const axios = require('axios');
 const mimeTypes = require('mime-types');
-const db = require('./database'); // Import the database module
+const db = require('../database'); // Import the database module
 
 let activeGroups = {};
 let lastSongTitles = {};
