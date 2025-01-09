@@ -21,7 +21,10 @@ const config = {
 // State management
 let activeGroups = {};
 let lastSongTitles = {};
-let searchIndex = 0;
+let searchIndex = Math.floor(Math.random() * 20) + 1; // Generates a random number between 1 and 20
+
+// Alternative fixed start:
+// let searchIndex = 1; // Starts at 1 and can go up to 20
 
 // Utility Functions
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -116,7 +119,7 @@ cmd({
 
         activeGroups[from] = true;
         await db.addStartedGroup(from);
-        
+
         if (!activeGroups['interval']) {
             activeGroups['interval'] = setInterval(async () => {
                 for (const groupId in activeGroups) {
@@ -129,7 +132,7 @@ cmd({
                         }
                     }
                 }
-                searchIndex = (searchIndex + 1) % config.searchQueries.length;
+                searchIndex = (searchIndex % 20) + 1; // Cycles between 1 and 20
             }, config.checkInterval);
         }
 
