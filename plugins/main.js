@@ -50,7 +50,7 @@ async function sendSong(conn, groupId, song) {
         if (lastSongTitles[groupId] !== song.title) {
             lastSongTitles[groupId] = song.title;
 
-            let message = `*🎧𝐃𝐢𝐝𝐮𝐥𝐚 𝐌𝐃 𝐒𝐨𝐧𝐠 𝐁𝐨𝐭🎧*\n\n\${song.title}n\n> *ᴛʜɪꜱ ɪꜱ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ꜱᴏɴɢ ꜱᴇɴᴅɪɴɡ ʙᴏᴛ*\n\n> *ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ*\n\nhttps://wa.me/message/DIDULLTK7ZOGH1\n\n> *ꜰᴏʟʟᴏᴡ ᴍʏ ᴄʜᴀɴᴇʟ*\n\nhttps://whatsapp.com/channel/0029VaqqF4GDTkJwKruLSK2f\n\n*© Projects of Didula Rashmika*`;
+            let message = `*🎧𝐃𝐢𝐝𝐮𝐥𝐚 𝐌𝐃 𝐒𝐨𝐧𝐠 𝐁𝐨𝐭🎧*\n\n\${song.title}\n> *ᴛʜɪꜱ ɪꜱ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ꜱᴏɴɢ ꜱᴇɴᴅɪɴɡ ʙᴏᴛ*\n\n> *ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ*\n\nhttps://wa.me/message/DIDULLTK7ZOGH1\n\n> *ꜰᴏʟʟᴏᴡ ᴍʏ ᴄʜᴀɴᴇʟ*\n\nhttps://whatsapp.com/channel/0029VaqqF4GDTkJwKruLSK2f\n\n*© Projects of Didula Rashmika*`;
 
             try {
                 const res = await axios.get(song.audioUrl, {
