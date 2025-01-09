@@ -1,3 +1,4 @@
+
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 const yts = require("yt-search");
@@ -48,24 +49,28 @@ async function sendSong(conn, groupId, song) {
 
             let message = `🎶 *Latest Song*\n\n*Title:* ${song.title}\n*Artist:* ${song.artist}\n*Download Link:* ${song.downloadUrl}\n\n*© Projects of Didula Rashmika*`;
 
-            const res = await axios.get(song.audioUrl, {
-                responseType: 'arraybuffer',
-                timeout: 15000
-            });
+            try {
+                const res = await axios.get(song.audioUrl, {
+                    responseType: 'arraybuffer',
+                    timeout: 15000
+                });
 
-            const mime = res.headers['content-type'] || 'application/octet-stream';
-            const extension = mimeTypes.extension(mime) || 'unknown';
-            const fileName = `${song.title}.${extension}`;
+                const mime = res.headers['content-type'] || 'application/octet-stream';
+                const extension = mimeTypes.extension(mime) || 'unknown';
+                const fileName = `${song.title}.${extension}`;
 
-            await conn.sendMessage(groupId, {
-                document: { url: song.audioUrl },
-                caption: message,
-                mimetype: mime,
-                fileName: fileName
-            });
+                await conn.sendMessage(groupId, {
+                    document: { url: song.audioUrl },
+                    caption: message,
+                    mimetype: mime,
+                    fileName: fileName
+                });
 
-            // Add the sent song to the database
-            db.addSentSong(groupId, song.title);
+                // Add the sent song to the database
+                await db.addSentSong(groupId, song.title);
+            } catch (err) {
+                console.error(`Error sending song: ${err.message}`);
+            }
         }
     }
 }
@@ -93,7 +98,7 @@ cmd({
         if (isAdmin || isBotOwner) {
             if (!activeGroups[from]) {
                 activeGroups[from] = true;
-                db.addStartedGroup(from); // Save started group to the database
+                await db.addStartedGroup(from); // Save started group to the database
                 await conn.sendMessage(from, { text: "🎵 Automatic song updates activated." });
 
                 if (!activeGroups['interval']) {
@@ -133,7 +138,7 @@ cmd({
         if (isAdmin || isBotOwner) {
             if (activeGroups[from]) {
                 delete activeGroups[from];
-                db.removeStoppedGroup(from); // Save stopped group to the database
+                await db.removeStoppedGroup(from); // Save stopped group to the database
                 await conn.sendMessage(from, { text: "🛑 Automatic song updates deactivated." });
 
                 if (Object.keys(activeGroups).length === 1 && activeGroups['interval']) {
