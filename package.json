@@ -51,6 +51,7 @@
     "javascript-obfuscator": "^4.0.0",
     "link-preview-js": "^3.0.4",
     "megajs": "^1.1.0",
+    "mime-types": "^2.1.35",
     "mongodb": "^6.5.0",
     "mrnima-moviedl": "latest",
     "mumaker": "^2.0.0",
