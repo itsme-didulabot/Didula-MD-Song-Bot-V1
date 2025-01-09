@@ -190,7 +190,7 @@ cmd({
     await conn.sendMessage(from, {
         text: message,
         caption: 'Here is a GIF to show I am alive!',
-        video: { url: aliveGif, mimetype: 'video/gif' } // Ensure the URL points to a valid GIF
+        video: { url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp', mimetype: 'video/gif' } // Updated GIF URL
     });
 });
 
