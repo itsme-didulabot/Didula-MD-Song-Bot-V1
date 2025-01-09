@@ -76,7 +76,7 @@ async function checkAndPostSong(conn, groupId) {
 
 // Command to activate 24/7 song service in a group
 cmd({
-    pattern: "startmusic",
+    pattern: "startsong",
     desc: "Enable automatic song updates in this group",
     isGroup: true,
     react: "🎵",
@@ -115,7 +115,7 @@ cmd({
 
 // Command to deactivate the 24/7 song service
 cmd({
-    pattern: "stopmusic",
+    pattern: "stopsong",
     desc: "Disable automatic song updates in this group",
     isGroup: true,
     react: "🛑",
@@ -148,7 +148,7 @@ cmd({
 
 // Command to check if the music service is active
 cmd({
-    pattern: "checkmusic",
+    pattern: "checksong",
     desc: "Check if the automatic song service is active in this group",
     isGroup: true,
     react: "🔍",
