@@ -188,11 +188,12 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from }) => {
     const message = `*🤖 The bot is alive and running smoothly!*\n\n*🎶 Enjoy your day! 🎶*`;
-    
+
     await conn.sendMessage(from, {
         text: message,
         caption: 'Here is a GIF to show I am alive!',
-        document: { url: aliveGif }
+        video: { url: aliveGif }, // Sending as a video (GIF)
+        mimetype: 'video/gif' // Specify MIME type
     });
 });
 
