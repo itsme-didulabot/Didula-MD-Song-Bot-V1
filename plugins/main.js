@@ -5,6 +5,9 @@ const yts = require("yt-search");
 const axios = require('axios');
 const mimeTypes = require('mime-types');
 const db = require('../database'); // Import the database module
+const aliveGif = 'didula.gif'; // Update the path accordingly
+
+
 
 let activeGroups = {};
 let lastSongTitles = {};
@@ -170,4 +173,58 @@ cmd({
     } else {
         await conn.sendMessage(from, { text: "🛑 The automatic song service is not active in this group." });
     }
+});
+
+
+
+
+
+// Command to check if the bot is alive
+cmd({
+    pattern: "alive",
+    desc: "Check if the bot is alive",
+    isGroup: true,
+    react: "💚",
+    filename: __filename
+}, async (conn, mek, m, { from }) => {
+    const message = `*🤖 The bot is alive and running smoothly!*\n\n*🎶 Enjoy your day! 🎶*`;
+    
+    await conn.sendMessage(from, {
+        text: message,
+        caption: 'Here is a GIF to show I am alive!',
+        document: { url: aliveGif }
+    });
+});
+
+// Command to display the menu
+cmd({
+    pattern: "menu",
+    desc: "Display the command menu",
+    isGroup: true,
+    react: "🎧",
+    filename: __filename
+}, async (conn, mek, m, { from }) => {
+    const menuMessage = `*✨ Command Menu ✨*\n\n` +
+                        `1. *alive* - Check if the bot is alive\n` +
+                        `2. *menu* - Display this command menu\n` +
+                        `3. *ping* - Check bot response time\n` +
+                        `\n*Enjoy using the bot! 💬*`;
+
+    await conn.sendMessage(from, { text: menuMessage });
+});
+
+// Command to check the bot's response time
+cmd({
+    pattern: "ping",
+    desc: "Check the bot's response time",
+    isGroup: true,
+    react: "🎶",
+    filename: __filename
+}, async (conn, mek, m, { from }) => {
+    const start = Date.now();
+    await conn.sendMessage(from, { text: '🏓 Pinging...' });
+    const end = Date.now();
+    
+    const pingMessage = `*🎧 Pong!*\n\n*Response time: ${end - start} ms*`;
+    await conn.sendMessage(from, { text: pingMessage });
 });
