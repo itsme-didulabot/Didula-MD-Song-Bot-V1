@@ -180,49 +180,74 @@ cmd({
 // Command to check if the bot is alive
 cmd({
     pattern: "alive",
-    desc: "Check if the bot is alive",
-    isGroup: true,
-    react: "💚",
+    desc: "Check bot online status",
+    category: "main",
     filename: __filename
-}, async (conn, mek, m, { from }) => {
-    const message = `*🤖 The bot is alive and running smoothly!*\n\n*🎶 Enjoy your day! 🎶*`;
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+        return await conn.sendMessage(from,{
+            image: {url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp'},
+            caption: '🟢 Bot is Online and Ready to Use!'
+        },{quoted: mek})
+    }catch(e){
+        console.log(e)
+        reply(`${e}`)
+    }
+})
 
-    await conn.sendMessage(from, {
-        text: message,
-        caption: 'Here is a GIF to show I am alive!',
-        video: { url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp', mimetype: 'video/gif' } // Updated GIF URL
-    });
-});
-
-// Command to display the menu
+// Menu Command
 cmd({
     pattern: "menu",
-    desc: "Display the command menu",
-    isGroup: true,
-    react: "🎧",
+    desc: "Display bot commands menu",
+    category: "main",
     filename: __filename
-}, async (conn, mek, m, { from }) => {
-    const menuMessage = `*✨ Command Menu ✨*\n\n` +
-                        `1. *alive* - Check if the bot is alive\n` +
-                        `2. *menu* - Display this command menu\n` +
-                        `3. *ping* - Check bot response time\n` +
-                        `\n*Enjoy using the bot! 💬*`;
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+        const menuText = `*📋 BOT COMMANDS MENU*
+        
+╭─⦿ *Main Commands*
+│ ⌲ .alive - Check bot status
+│ ⌲ .menu - Show this menu
+│ ⌲ .ping - Check bot speed
+╰────────────⦿
 
-    await conn.sendMessage(from, { text: menuMessage });
-});
+╭─⦿ *User Info*
+│ ⌲ Name: ${pushname}
+│ ⌲ Number: ${senderNumber}
+╰────────────⦿`
 
-// Command to check the bot's response time
+        return await conn.sendMessage(from,{
+            image: {url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp'},
+            caption: menuText
+        },{quoted: mek})
+    }catch(e){
+        console.log(e)
+        reply(`${e}`)
+    }
+})
+
+// Ping Command
 cmd({
     pattern: "ping",
-    desc: "Check the bot's response time",
-    isGroup: true,
-    react: "🎶",
+    desc: "Check bot response speed",
+    category: "main",
     filename: __filename
-}, async (conn, mek, m, { from }) => {
-    const start = Date.now();
-    await conn.sendMessage(from, { text: '🏓 Pinging...' });
-    const end = Date.now();
-
-    const pingMessage = `*🎧 Pong!*\n\n*Response time: ${end - start} ms*`;
-    await conn.sendMessage(from, { text: pingMessage });
-});
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+        const start = new Date().getTime()
+        await conn.sendMessage(from, { text: '📍 Testing ping...' })
+        const end = new Date().getTime()
+        const responseTime = end - start
+        
+        return await conn.sendMessage(from,{
+            image: {url: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp'},
+            caption: `🏓 Pong!\nResponse Time: ${responseTime}ms`
+        },{quoted: mek})
+    }catch(e){
+        console.log(e)
+        reply(`${e}`)
+    }
+})
