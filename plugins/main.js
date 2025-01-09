@@ -9,8 +9,8 @@ const db = require('../database');
 const config = {
     aliveGif: 'https://i.giphy.com/6FjaNxfq8vHSQI0aVm.webp',
     ownerNumber: '94771820962',
-    botName: 'Didula MD Song Bot',
-    searchQueries: ["Sinhala songs", "Slowed Reverb Sinhala", "New Sinhala Song", "මනෝපාරකට", "manoparakata"],
+    botName: 'DIDULA MD SONG BOT',
+    searchQueries: ["Sinhala songs", "Slowed Reverb Sinhala", "New Sinhala Song", "මනෝපාරකට", "Sinhala songs 2025", "New Slowed Reverb Sinhala", "dj Sinhala Song", "new මනෝපාරකට" "manoparakata 2025"],
     checkInterval: 60000,
     requestTimeout: 15000,
     maxRetries: 3,
@@ -207,7 +207,7 @@ cmd({
     try {
         await conn.sendMessage(from, {
             image: { url: config.aliveGif },
-            caption: '🟢 Bot is Online and Ready!'
+            caption: ' 🎧DIDULA MD SONG BOT is Online and Ready!'
         }, { quoted: mek });
     } catch (error) {
         await errorHandler(error, conn, from, "Failed to check bot status");
@@ -221,7 +221,7 @@ cmd({
     filename: __filename
 }, async(conn, mek, m, { from, pushname, senderNumber }) => {
     try {
-        const menuText = `*📋 BOT COMMANDS MENU*
+        const menuText = `*🎧DIDULA MD SONG BOT COMMANDS MENU*
         
 ╭─⦿ *Main Commands*
 │ ⌲ .alive - Check bot status
@@ -258,7 +258,7 @@ cmd({
 }, async(conn, mek, m, { from }) => {
     try {
         const start = Date.now();
-        await conn.sendMessage(from, { text: '📍 Testing ping...' });
+        await conn.sendMessage(from, { text: 'DIDULA MD SONG BOT Testing ping...' });
         const end = Date.now();
         const responseTime = end - start;
 
@@ -303,7 +303,7 @@ cmd({
 
         await conn.sendMessage(from, {
             image: { url: config.aliveGif },
-            caption: `*👤 Bot Owner Information*\n\n`
+            caption: `*👤 DISULA MD SONG BOT Owner Information*\n\n`
                 + `*Name:* Didula Rashmika\n`
                 + `*Number:* +${config.ownerNumber}\n`
                 + `*Role:* Owner Of the ${config.botName}\n\n`
