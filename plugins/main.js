@@ -177,8 +177,6 @@ cmd({
 
 
 
-
-
 // Command to check if the bot is alive
 cmd({
     pattern: "alive",
@@ -192,8 +190,7 @@ cmd({
     await conn.sendMessage(from, {
         text: message,
         caption: 'Here is a GIF to show I am alive!',
-        video: { url: aliveGif }, // Sending as a video (GIF)
-        mimetype: 'video/gif' // Specify MIME type
+        video: { url: aliveGif, mimetype: 'video/gif' } // Ensure the URL points to a valid GIF
     });
 });
 
@@ -225,7 +222,7 @@ cmd({
     const start = Date.now();
     await conn.sendMessage(from, { text: '🏓 Pinging...' });
     const end = Date.now();
-    
+
     const pingMessage = `*🎧 Pong!*\n\n*Response time: ${end - start} ms*`;
     await conn.sendMessage(from, { text: pingMessage });
 });
