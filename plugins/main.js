@@ -3,6 +3,7 @@ const { fetchJson } = require('../lib/functions');
 const yts = require("yt-search");
 const axios = require('axios');
 const mimeTypes = require('mime-types');
+const db = require('./database'); // Import the database module
 
 let activeGroups = {};
 let lastSongTitles = {};
@@ -62,6 +63,9 @@ async function sendSong(conn, groupId, song) {
                 mimetype: mime,
                 fileName: fileName
             });
+
+            // Add the sent song to the database
+            db.addSentSong(groupId, song.title);
         }
     }
 }
@@ -89,6 +93,7 @@ cmd({
         if (isAdmin || isBotOwner) {
             if (!activeGroups[from]) {
                 activeGroups[from] = true;
+                db.addStartedGroup(from); // Save started group to the database
                 await conn.sendMessage(from, { text: "🎵 Automatic song updates activated." });
 
                 if (!activeGroups['interval']) {
@@ -108,7 +113,7 @@ cmd({
             await conn.sendMessage(from, { text: "🚫 This command can only be used by group admins or the bot owner." });
         }
     } catch (e) {
-        console.error(`Error in startmusic command: ${e.message}`);
+        console.error(`Error in startsong command: ${e.message}`);
         await conn.sendMessage(from, { text: "Failed to activate the music service." });
     }
 });
@@ -128,6 +133,7 @@ cmd({
         if (isAdmin || isBotOwner) {
             if (activeGroups[from]) {
                 delete activeGroups[from];
+                db.removeStoppedGroup(from); // Save stopped group to the database
                 await conn.sendMessage(from, { text: "🛑 Automatic song updates deactivated." });
 
                 if (Object.keys(activeGroups).length === 1 && activeGroups['interval']) {
@@ -141,7 +147,7 @@ cmd({
             await conn.sendMessage(from, { text: "🚫 This command can only be used by group admins or the bot owner." });
         }
     } catch (e) {
-        console.error(`Error in stopmusic command: ${e.message}`);
+        console.error(`Error in stopsong command: ${e.message}`);
         await conn.sendMessage(from, { text: "Failed to deactivate the music service." });
     }
 });
