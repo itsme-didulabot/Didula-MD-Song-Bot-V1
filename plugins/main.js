@@ -20,7 +20,17 @@ const config = {
 // State management
 let activeGroups = {};
 let lastSongTitles = {};
-let searchIndex = 1;
+let searchIndex = 1; // Initialize searchIndex to 1
+
+// Wait 10 minutes
+async function updateSearchIndex() {
+  while (true) {
+    await sleep(600000); // 10 minutes in milliseconds
+    searchIndex = (searchIndex + 19) % 20 + 1; // Cycle through 1-20
+  }
+}
+
+updateSearchIndex(); // Start the updateSearchIndex loop
 
 // Utility Functions
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
