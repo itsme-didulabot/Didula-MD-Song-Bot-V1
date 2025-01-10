@@ -30,7 +30,7 @@ const config = {
 // State management
 let activeGroups = {};
 let lastSongTitles = {};
-let searchIndex = 4;
+let searchIndex = 1;
 
 // Utility Functions
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -45,14 +45,14 @@ const errorHandler = async (error, conn, from, customMessage) => {
 
 // Core Functions
 async function getLatestSong(retryCount = config.maxRetries) {
-    for (let i = 4; i < retryCount; i++) {
+    for (let i = 1; i < retryCount; i++) {
         try {
             const searchQuery = config.searchQueries[searchIndex];
             const searchResult = await yts(searchQuery);
             
             if (!searchResult?.all?.length) continue;
             
-            const song = searchResult.all[0];
+            const song = searchResult.all[1];
             const downloadInfo = await fetchJson(
                 `https://apitest1-f7dcf17bd59b.herokuapp.com/download/ytmp3?url=${encodeURIComponent(song.url)}`
             );
