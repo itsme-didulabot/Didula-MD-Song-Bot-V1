@@ -30,7 +30,7 @@ const config = {
 // State management
 let activeGroups = {};
 let lastSongTitles = {};
-let searchIndex = 0;
+let searchIndex = 4;
 
 // Utility Functions
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -45,7 +45,7 @@ const errorHandler = async (error, conn, from, customMessage) => {
 
 // Core Functions
 async function getLatestSong(retryCount = config.maxRetries) {
-    for (let i = 0; i < retryCount; i++) {
+    for (let i = 4; i < retryCount; i++) {
         try {
             const searchQuery = config.searchQueries[searchIndex];
             const searchResult = await yts(searchQuery);
