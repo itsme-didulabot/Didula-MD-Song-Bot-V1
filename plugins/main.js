@@ -1,3 +1,4 @@
+
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 const yts = require("yt-search");
@@ -30,7 +31,7 @@ const config = {
 // State management
 let activeGroups = {};
 let lastSongTitles = {};
-let searchIndex = 1;
+let searchIndex = 0; // Start with the first search query
 
 // Utility Functions
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -45,27 +46,35 @@ const errorHandler = async (error, conn, from, customMessage) => {
 
 // Core Functions
 async function getLatestSong(retryCount = config.maxRetries) {
-    for (let i = 1; i < retryCount; i++) {
+    for (let i = 0; i < retryCount; i++) {
         try {
             const searchQuery = config.searchQueries[searchIndex];
             const searchResult = await yts(searchQuery);
-            
+
             if (!searchResult?.all?.length) continue;
-            
-            const song = searchResult.all[1];
-            const downloadInfo = await fetchJson(
-                `https://apitest1-f7dcf17bd59b.herokuapp.com/download/ytmp3?url=${encodeURIComponent(song.url)}`
-            );
 
-            if (!downloadInfo?.result?.dl_link) continue;
+            // Loop through the search results to find a non-duplicate song
+            for (const song of searchResult.all) {
+                if (lastSongTitles[searchIndex] !== song.title) {
+                    const downloadInfo = await fetchJson(
+                        `https://apitest1-f7dcf17bd59b.herokuapp.com/download/ytmp3?url=${encodeURIComponent(song.url)}`
+                    );
 
-            return {
-                title: downloadInfo.result.title || song.title,
-                artist: song.author?.name || 'Unknown Artist',
-                downloadUrl: downloadInfo.result.dl_link,
-                thumbnail: song.thumbnail,
-                audioUrl: downloadInfo.result.dl_link
-            };
+                    if (downloadInfo?.result?.dl_link) {
+                        return {
+                            title: downloadInfo.result.title || song.title,
+                            artist: song.author?.name || 'Unknown Artist',
+                            downloadUrl: downloadInfo.result.dl_link,
+                            thumbnail: song.thumbnail,
+                            audioUrl: downloadInfo.result.dl_link
+                        };
+                    }
+                }
+            }
+
+            // If no valid song found, continue to the next search query
+            searchIndex = (searchIndex + 1) % config.searchQueries.length;
+
         } catch (error) {
             if (i === retryCount - 1) throw error;
             await sleep(config.retryDelay);
@@ -77,7 +86,7 @@ async function getLatestSong(retryCount = config.maxRetries) {
 async function sendSong(conn, groupId, song) {
     if (!song?.title || lastSongTitles[groupId] === song.title) return;
 
-    lastSongTitles[groupId] = song.title;
+    lastSongTitles[groupId] = song.title; // Store the last sent song title
     const message = `*🎧${config.botName}🎧*\n\n${song.title}\n\n> *ᴛʜɪꜱ ɪꜱ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ꜱᴏɴɢ ꜱᴇɴᴅɪɴɢ ʙᴏᴛ*\n\n> *ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ*\n\nhttps://wa.me/message/DIDULLTK7ZOGH1\n\n> *ꜰᴏʟʟᴏᴡ ᴍʏ ᴄʜᴀɴᴇʟ*\n\nhttps://whatsapp.com/channel/0029VaqqF4GDTkJwKruLSK2f\n\n*© Projects of Didula Rashmika*`;
 
     try {
@@ -154,10 +163,6 @@ cmd({
         await errorHandler(error, conn, from, "Failed to activate song service");
     }
 });
-
-
-
-
 
 cmd({
     pattern: "stopsong",
