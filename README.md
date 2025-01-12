@@ -20,6 +20,25 @@ Didula MD Song Bot is an automated bot designed to send songs to WhatsApp groups
 - Automatically sends songs to WhatsApp groups.
 - Easy to deploy on various platforms.
 
+
+
+### Step 1: Get the Session ID
+
+1. **Access the URL**: Open your browser and navigate to [https://prabath-md-pair-web-v2-slk.koyeb.app/pair](https://prabath-md-pair-web-v2-slk.koyeb.app/pair).
+2. **Obtain the Session ID**: After accessing the URL, you should see a session ID displayed. Copy this session ID.
+
+### Step 2: Remove the Prefix
+
+- If your session ID looks something like `PRABATH-MD~123456`, you need to remove the prefix (`PRABATH-MD~`) to get just the numerical part (e.g., `123456`).
+
+### Step 3: Add Session ID to Config.js
+
+1. **Open your project**: Navigate to your bot's project directory where the `config.js` file is located.
+2. **Edit config.js**: Open the `config.js` file in a text editor
+
+
+
+
 ## Installation
 
 To run the bot locally, follow these steps:
