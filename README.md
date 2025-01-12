@@ -9,6 +9,8 @@
 **Bot Testing Group:** [<img src='https://img.shields.io/badge/Join%20Group-WhatsApp-green?style=for-the-badge&logo=whatsapp&logoColor=white' width=115 height=28 />](https://chat.whatsapp.com/Cqz3YYSAfFZJD0lMpyvuzl)  
 **Repo URL:** [<img src='https://img.shields.io/badge/GitHub%20Repo-black?style=for-the-badge&logo=github&logoColor=white' width=115 height=28 />](https://github.com/itsme-didulabot/Didula-MD-Song-Bot-V1)
 
+# ⚠️Work only in Groups 
+
 ## Overview
 
 Didula MD Song Bot is an automated bot designed to send songs to WhatsApp groups effortlessly. 
